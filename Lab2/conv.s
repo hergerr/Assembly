@@ -203,40 +203,44 @@ movb $1 , sum( , %rdi , 8) #jesli byla jakas korekta to dodajemy ja
 inc %rdi
 
 no_carry:
+movq %rdi, %r12 
 
-				#konwersja na osemkowy
-imul $8, %rdi 	#tyle bajtow zapisalismy
-movq $0, %r14   #licznik, by czytac bajty z bufora result
+#konwersja na osemkowy
+movq $0, %r14   #licznik, by czytac bajty z bufora sum
 movq $0, %r15 	#licznik, by pisac kolejne cyfry osemkowe
-convert:
 
-	cmp $0, %rdi 	#czy sczytane wszystkie bajty
-	jle end 		#koniec konwersji
-					#trzy kolejne bajty
+	convert:
+	cmp $0, %r12 #czy sczytane wszystkie bajty
+	jle end #koniec konwersji
+
+	#trzy kolejne bajty
 	movq $0, %rbx
 	movq $0, %rcx
 	movq $0, %rdx
+	
+	#sklejanie 3 bajtow
 	movb sum(, %r14, 1), %bl
 	inc %r14
-	dec %rdi #liczba pozostalych bajtow do wczytania
+	dec %r12 #liczba pozostalych bajtow do wczytania
 	movb sum(, %r14, 1), %cl
 	shl $8, %rcx #przesuniecie o 8
 	inc %r14
-	dec %rdi
+	dec %r12
 	movb sum(, %r14, 1), %dl
-	shlq $16, %rdx #przesuniecie o 16
+	shl $16, %rdx #przesuniecie o 16
 	inc %r14
-	dec %rdi
+	dec %r12
 	or %rbx, %rcx #zlaczenie wartosci w jednym rejestrze
 	or %rcx, %rdx #w rdx pakiet 3B=24b do konwersji
 
 	movq $0, %r11 #petla musi sie obrocic 24/3 = 8 razy (8 cyfr osemkowych)
 	convert_three_bytes:
-		movb %dl, %cl #kopia fragmentu rejestru dl
-		andb $0x7, %cl #wyluskanie najmlodszych 3 bitow (wartosc cyfry osemkowa)
-		addb $'0', %cl #wartosc ASCII
-		push %rcx #wrzuc na stos, poniewaz musimy odwrocic kolejnosc
-		shrq $3, %rdx #przesuwamy kolejne 3 bity
+	movq $0, %rcx
+	movb %dl, %cl #kopia fragmentu rejestru rdx
+		andb $0x7, %cl 	#wyluskanie najmlodszych 3 bitow (wartosc cyfry osemkowa)
+		addb $'0', %cl 	#wartosc ASCII
+		push %rcx 		#wrzuc na stos, poniewaz musimy odwrocic kolejnosc
+		shrq $3, %rdx 	#przesuwamy kolejne 3 bity
 		inc %r11
 		inc %r15
 		cmp $8, %r11
@@ -266,8 +270,8 @@ movq %rax, %r8  #uchwyt pliku
 
 movq $SYSWRITE, %rax
 movq  %r8, %rdi
-movq $sum, %rsi
-movq %r10, %rdx
+movq $numberout, %rsi
+movq %r15, %rdx
 syscall
 
 #zamkniecie pliku
