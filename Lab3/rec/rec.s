@@ -9,7 +9,7 @@ EXIT_SUCCESS = 0
 _start:
 
 
-movq $4, %r12
+movq $10, %r12
 call upper
 movq %r8, %rdx
 
@@ -33,7 +33,6 @@ rek:
 sub $2, %r12	#odjecie 2 od numeru wyrazu
 call upper		#wywoloanie funkcji kontrolujacej
 movq %r8, %r10	#w r8 jest wynik
-movq %r10, %r11
 
 dec %r12		#pomniejszenie numeru wyrazi
 call upper		#kontrola czy znany jest ten wyraz
