@@ -1,73 +1,69 @@
 .data
+STDOUT = 1
+SYSWRITE = 1
+SYSEXIT = 60
+EXIT_SUCCESS = 0
 
 .text
 .globl _start
 _start:
 
-movq $3, %rax
 
-push %rax
-call rec
-pop %rax
+movq $4, %r12
+call upper
+movq %r8, %rdx
 
-movq %rax, %rdi
-movq $60, %rax
+movq $SYSEXIT, %rax
+movq %rdx, %rdi
 syscall
 
 
-rec:
+upper:			#funkcja kontrolujaca czy pojawil sie juz znany wyraz
 push %rbp
-movq %rsp, %rbp 	#poprzedni szczyt stosu w rbp
-sub $16, %rsp
-movq 16(%rbp), %rbx #zadany wyraz do policzenia
-movq %rbx, -8(%rbp) #-8(%rbp)=n
+movq %rsp, %rbp		#prolog funkcji
+sub $16, %rsp		#miejsce na zmienne lokalne
+mov %r12, -8(%rbp)	#w r12 nr wyrazu
+mov %r10, -16(%rbp)	#r10 trzyma wartosc poprzedniego wyrazu
+
+cmp $2, %r12	#jesli jest 2gi wyraz to skok do znanych wartosci
+jle results
 
 
-#sprawdzenie warunkow koncowych
-cmp $2, -8(%rbp)
-je is2
+rek:
+sub $2, %r12	#odjecie 2 od numeru wyrazu
+call upper		#wywoloanie funkcji kontrolujacej
+movq %r8, %r10	#w r8 jest wynik
+movq %r10, %r11
 
-cmp $1, -8(%rbp)
-je is1
+dec %r12		#pomniejszenie numeru wyrazi
+call upper		#kontrola czy znany jest ten wyraz
+imulq $2, %r8	#pomnozenie razy 2, wynik w r8
 
-cmp $0, -8(%rbp)
-je is0
-
-
-decq -8(%rbp)
-push -8(%rbp)
-call rec 	#f(n -1)
-pop %rax
-movq %rax, -16(%rbp)
-
-decq -8(%rbp)
-push -8(%rbp)
-call rec
-pop %rbx	#f(n-2)
-movq %rbx, -16(%rbp)
+sub %r8, %r10	#odjecie n-2 i n-3 wyrazu
+movq %r10, %r8	#zapisujemy to jako wynik
+jmp exit
 
 
-decq -8(%rbp)
-push -8(%rbp)
-call rec
-pop %rcx	#f(n-3)
-imulq $2, %rcx
-subq %rcx, -16(%rbp)
-movq -16(%rbp), %rcx 
-movq %rcx, 16(%rbp)
-jmp end
+results:	#znane wartosci funkcji
+cmp $0, %r12
+je zero
 
-is0:
-movq $2, 16(%rbp)
-jmp end
+cmp $1, %r12
+je one
 
-is1:
-movq $1, 16(%rbp)
+movq $3, %r8
+jmp exit
 
-is2:
-movq $3, 16(%rbp)
+zero:
+movq $2, %r8
+jmp exit
 
-end:
-mov %rbp , %rsp
+one:
+movq $1, %r8
+
+exit:
+mov -8(%rbp), %r12
+mov -16(%rbp), %r10
+movq %rbp, %rsp
 pop %rbp
 ret
