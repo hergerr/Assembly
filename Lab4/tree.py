@@ -1,17 +1,18 @@
 width = int(input('Podaj szerokosc: '))
 
-temp = width
+
+temp = 1
 
 for i in range(width):
 	for j in range(temp):
 		print('*', end='')
-	temp -= 1
+	temp += 1
 	print()
 		
 
-temp = 2		
+temp = width-1		
 for i in range(width-1):
 	for j in range(temp):
 		print('*', end='')
-	temp+=1
+	temp-=1
 	print()

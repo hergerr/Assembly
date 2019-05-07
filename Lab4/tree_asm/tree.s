@@ -5,7 +5,7 @@ SYSEXIT = 60
 STDOUT = 1
 STDIN = 0
 EXIT_SUCCESS = 0
-WIDTH = 10
+WIDTH = 5
 
 buf: .ascii "*"
 buf_len = .-buf
@@ -20,7 +20,7 @@ buf_len2 = .-buf
 _start:
 
 movq $WIDTH, %r12 #zadana szerokosc
-movq $WIDTH, %r13 #zadana szerokosc - kopia
+movq $1, %r13 #zmienna temp z pythona
 movq $0, %r14 #index i
 movq $0, %r15 #index j
 
@@ -39,14 +39,15 @@ outer_loop:
 	outer_loop_end:
 	call print_line
 	movq $0, %r15
-	dec %r13
+	inc %r13
 	jmp outer_loop
 
 
 
 second_part:
 
-movq $2, %r13
+movq $WIDTH, %r13		#zmienna temp z pythona
+dec %r13
 movq $WIDTH, %r12
 dec %r12
 movq $0, %r14 #index i
@@ -67,7 +68,7 @@ outer_loop2:
 	outer_loop_end2:
 	call print_line
 	movq $0, %r15
-	inc %r13
+	dec %r13
 	jmp outer_loop2
 
 
