@@ -7,18 +7,22 @@ STDIN = 0
 EXIT_SUCCESS = 0
 WIDTH = 5
 
-buf: .ascii "*"
+buf: .ascii "abcdefghijasdidasjiodjqwiojwo"
 buf_len = .-buf
 
 buf2: .ascii "\n"
-buf_len2 = .-buf
+buf_len2 = .-buf2
+
+buf3: .ascii "x"
+buf_len3 = .-buf3
 
 
 .text
 .globl _start
 
 _start:
-
+movq $0, %r8
+movq $0, %rbx	#licznik
 movq $WIDTH, %r12 #zadana szerokosc
 movq $1, %r13 #zmienna temp z pythona
 movq $0, %r14 #index i
@@ -32,7 +36,13 @@ outer_loop:
 		inner_loop:
 		cmp %r13, %r15
 		je outer_loop_end
+
+		movb buf(,%rbx,1), %al
+		movb %al, buf3(,%r8,1)
+		movq $buf3, %r10	#adres buf3
+		push %r10		
 		call print
+		inc %rbx
 		inc %r15
 		jmp inner_loop
 	
@@ -61,7 +71,13 @@ outer_loop2:
 		inner_loop2:
 		cmp %r13, %r15
 		je outer_loop_end2
+
+		movb buf(,%rbx,1), %al
+		movb %al, buf3(,%r8,1)
+		movq $buf3, %r10	#adres buf3
+		push %r10
 		call print
+		inc %rbx		
 		inc %r15
 		jmp inner_loop2
 	
@@ -80,10 +96,11 @@ syscall
 print:
 push %rbp
 movq %rsp, %rbp 	#poprzedni szczyt
+movq 16(%rbp), %rcx	#adres bufora
 
 movq $SYSWRITE, %rax
 movq $STDOUT, %rdi
-movq $buf, %rsi
+movq %rcx, %rsi
 movq $buf_len, %rdx
 syscall
 
