@@ -11,28 +11,28 @@ format_printf: .asciz "%lf \n",  # wywoływania funkcji scanf i printf
 .global main
  
 main:
-mov $0, %rax        
-mov $format_scanf, %rdi 
+mov $0, %rax            # liczba argumentow zmiennoprzecinkowych 
+mov $format_scanf, %rdi # adres stringa formatujacego
 mov $integer, %rsi  
 mov $float, %rdx    
 mov $double, %rcx
-push %rbx
+push %rbx               # stos musi byc zapelniony (chyba)
 call scanf    
 pop %rbx
  
 
 movq $0, %rdi
 movq $0, %rcx
-movq $2, %rax
+movq $2, %rax           # liczba arg zmiennoprzec
 movq integer(,%rcx, 4), %rdi
-movss float, %xmm0
-movsd double, %xmm1
+movss float, %xmm0      # przekazanie argumentu o poj prez
+movsd double, %xmm1     # przekazanie argumentu o pod prez
 call function 
  
  
-movq $1, %rax
-movq $format_printf, %rdi
-sub $8, %rsp
+movq $1, %rax               # liczba arg zmniennoprzec
+movq $format_printf, %rdi   # string formatujacy
+sub $8, %rsp                # workaround
 call printf
 add $8, %rsp
  
