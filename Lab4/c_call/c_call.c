@@ -1,4 +1,4 @@
-double add(int x, float y, double z){
+double funkcja(int x, float y, double z){
 	return x+y+z;
 }
 
