@@ -1,4 +1,5 @@
-double funkcja(int x, float y, double z){
-	return x+y+z;
+double function(int x, float y, double z){
+	double o = x+y+z;
+	return o;
 }
 
