@@ -17,7 +17,7 @@ for i in range(0, len(string)):
 
 	#jesli wydzie dalej niz z, to musi isc modulo
 	if temp > 122:
-		temp = 96 + (temp % 122)
+		temp = temp - 26
 
 	output += chr(temp)
 

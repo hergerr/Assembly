@@ -19,34 +19,38 @@ cesar:
 	# W rejestrze RDX znajdzie sie klucz do szyfru
 
     # indeks
-    mov $0, %rax
+	movq %rdx, %rax
+	movq $0, %rdx
 	
 	# liczenie modulo klucza, wynik nadal w RDX
 	movq $26, %r11
 	idivq %r11
 
+    mov $0, %rax
+
+
 	loop:
 		mov (%rdi, %rax, 1), %bl
-		cmp 'z', %bl
+		cmp $'z', %bl
 		jg skip_char
-		cmp 'a', %bl
+		cmp $'a', %bl
 		jl skip_char
 
 		# dodanie klucza z rdx do znaku w rbx
 		add %dl, %bl 
 		# nowy znak juz gotowy
-	
-		# cmp 'z', %bl
-		# jle skip_char
-		
-		# idivq $122  
-		
+
+		# sprawdzenie czy nie wyszlismy poza zakres malych liter
+		cmp $122, %bl
+		jle skip_char
+		subq $26, %rbx
+
 		skip_char:
     	mov %bl, (%rdi, %rax, 1)
 
 	inc %rax
 	cmp %rax, %rsi
-	je loop
+	jne loop
 
 
     mov %rbp, %rsp

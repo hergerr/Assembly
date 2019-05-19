@@ -5,9 +5,9 @@
 extern void cesar(char * str, int len, int key);
  
 // Deklaracja zmiennych
-char txt[] = "aBcDefGG";
+char txt[] = "zbcdZGG";
 int len = 8;
-int key = 4;
+int key = 30;
  
 int main(void)
 {
