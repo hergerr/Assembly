@@ -32,16 +32,21 @@ int main(int argc, char **argv)
 	
 	read_x87_control_register(&n);	//wywołanie funkcji z asm
 	print_out_16_bit_value("CONTROL REGISTER (WARTOŚĆ PIERWOTNA)", n);	
+	
 	n &= ~ZERO_DIVIDE_EXCEPTION_BIT;	// zerowanie bitu odpowiedzialnego za dzielenie przez 0
 	write_x87_control_register(n);
 	read_x87_control_register(&n);
-	print_out_16_bit_value("CONTROL REGISTER (WYCZYSZCZONY BIT ZM)", n);
+	print_out_16_bit_value("CONTROL REGISTER (WYCZYSZCZONY BIT)", n);
+
 	n |= ZERO_DIVIDE_EXCEPTION_BIT;
 	write_x87_control_register(n);
 	read_x87_control_register(&n);	
-	print_out_16_bit_value("CONTROL REGISTER (USTAWIONY BIT ZM)", n);
+	print_out_16_bit_value("CONTROL REGISTER (USTAWIONY BIT)", n);
+	// printf("%lf\n", 2.0/0.0);
+	
 	n = read_x87_status_register();
 	print_out_16_bit_value("STATUS REGISTER (WARTOŚĆ PIERWOTNA)", n);
+	
 	d = 1.0 / 0.0;
 	n = read_x87_status_register();
 	print_out_16_bit_value("STATUS REGISTER (PO DZIELENIU PRZEZ 0)", n);

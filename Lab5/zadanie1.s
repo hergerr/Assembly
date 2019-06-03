@@ -23,7 +23,7 @@ taylor_arctg:
 	fldl 8(%ebp)	# pierwszy parametr ładowany do zmiennej x
 	fstpl x
 	
-	# result = x
+	# result = x, dlatego pierwszy pierwszy znak wyrazu to -
 	fldl x
 	fstpl result
 	
@@ -37,12 +37,12 @@ taylor_arctg:
 
 	# i = 0	
 	mov $0, %ecx
-.taylor_arctg_petla:
+.taylor_arctg_loop:
 	# i++
 	inc %ecx
 	
-	# st(0) = pow(x, n)
-	pushl %ecx		# pow korzsyta z ecx
+	# st(0) = x**n
+	pushl %ecx		# pow korzysta z ecx
 	pushl n + 4
 	pushl n
 	pushl x + 4
@@ -51,14 +51,14 @@ taylor_arctg:
 	addl $16, %esp
 	popl %ecx		# przywrócenie ecx
 	
-	# st(0) *= sign
-	fmull sign	# ustawienie znaku n-tego wyrazu
+	# st(0) *= sign, ustawienie znaku n-tego wyrazu
+	fmull sign	
 	
-	# st(0) /= n
-	fdivl n		# podzielenie przez n
+	# st(0) /= n, podzielenie przez n
+	fdivl n		
 	
-	# st(0) += result
-	faddl result	# razem z 64 to instrukcja +=
+	# st(0) + result, razem z 64 to instrukcja +=
+	faddl result	
 	
 	# result = st(0)
 	fstpl result	
@@ -74,9 +74,9 @@ taylor_arctg:
 	fchs	# change sign st(0)
 	fstpl sign
 	
-	# if (i < 100) goto .taylor_arctg_petla
+	# if (i < 100) goto .taylor_arctg_loop
 	cmpl $100, %ecx
-	jl .taylor_arctg_petla
+	jl .taylor_arctg_loop
 	
 	# return result;
 	fldl result	# rezultat na szcycie stosu
@@ -97,16 +97,16 @@ power:
 	
 	# st(0) = x
 	fldl 8(%ebp)	# załadowanie x na szczyt fpu st(0)
-.power_petla:
+.power_loop:
 	# ecx--
 	dec %ecx
 	
 	# st(0) *= x
 	fmull 8(%ebp)
 
-	# if (ecx != 1) goto .power_petla
+	# if (ecx != 1) goto .power_loop
 	cmpl $1, %ecx
-	jne .power_petla
+	jne .power_loop
 
 	leave
 	ret
