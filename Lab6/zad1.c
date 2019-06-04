@@ -1,13 +1,19 @@
 #include <stdio.h> 
 
+extern void add_arrays(float *a, float *b, float *c);
+
 int main()
 {
-    float a[4] = {1.1, 2.2, 3.3, 4.4};
-    float b[4] = {4.4, 3.3, 2.2, 1.1};
+    float a[8] = {1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3};
+    float b[8] = {4.4, 3.3, 2.2, 1.1, 3.3, 3.3, 1.3, 1.3};
+    float c[8] = {0};
 
-    for(int i = 0; i < 4; ++i){
-        printf("%f ", a[i]+b[i]);
+    add_arrays(a,b,c);
+
+    for(int i = 0; i < 8; ++i){
+        printf("%f ", c[i]);
     }
+    printf("\n");
 
     return 0;
 }

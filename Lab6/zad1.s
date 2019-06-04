@@ -1,30 +1,24 @@
-.global write_x87_control_register
-
 .data
-EXIT = 60
-EXIT_SUCCESS = 0
-
-value1:
-.float 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8
-value2:
-.float 1.1, 2.2, 3.3, 4.4, 1.1, 2.2, 3.3, 4.4
-.bss
-.comm arr, 512
-
 .text
-.globl _start
-_start:
-mov $0, %rax
-loop:
-    movups value1(, %rax, 8), %xmm0
-    movups value2(, %rax, 8), %xmm1
-    addps %xmm1, %xmm0
-    movups %xmm0, arr(,%rax, 8)
-    inc %rax
-    cmp $4, %rax
-jne loop
+.global add_arrays
+.type add_arrays, @function
 
-movq $EXIT, %rax
-movq $EXIT_SUCCESS, %rdi
-syscall
 
+add_arrays:
+    push %rbp
+    mov %rsp, %rbp
+    mov $0, %rax
+        loop:
+            # W rejestrze RDI znajdzie się wskaźnik na tablice a.
+            # W rejestrze RSI znajdzie się wskaznik na tablice b.
+           	# W rejestrze RDX znajdzie sie wskaznik na tablice c
+
+            movups (%rdi, %rax, 8), %xmm0
+            movups (%rsi, %rax, 8), %xmm1
+            addps %xmm1, %xmm0
+            movups %xmm0, (%rdx,%rax, 8)
+            inc %rax
+            cmp $4, %rax
+        jne loop
+    leave
+    ret
