@@ -1,8 +1,9 @@
 .data
 .text
 .global add_arrays
+.global time_asm
 .type add_arrays, @function
-
+.type time_asm, @function
 
 add_arrays:
     push %rbp
@@ -18,7 +19,18 @@ add_arrays:
             addps %xmm1, %xmm0
             movups %xmm0, (%rdx,%rax, 8)
             inc %rax
-            cmp $4, %rax
+            cmp $16, %rax
         jne loop
     leave
     ret
+
+time_asm:
+push %rbp
+mov %rsp, %rbp
+    mov $0, %eax
+    mov $0, %edx
+    rdtsc
+    shl $32, %rdx
+    add %edx, %eax
+leave
+ret

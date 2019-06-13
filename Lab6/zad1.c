@@ -1,19 +1,48 @@
-#include <stdio.h> 
+#define SIZE 32
+#include<stdio.h>
 
+extern int time_asm();
 extern void add_arrays(float *a, float *b, float *c);
+
+void c_add_arrays(float *a, float *b, float *c){
+    for (int i = 0; i < SIZE; i++)
+    {
+        c[i] = a[i] + b[i];
+    }
+    
+}
+
+void print(float *c){
+    for(int i = 0; i < SIZE; ++i){
+        printf("%f ", c[i]);
+    }
+    printf("\n\n");
+}
+
+
 
 int main()
 {
-    float a[8] = {1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3};
-    float b[8] = {4.4, 3.3, 2.2, 1.1, 3.3, 3.3, 1.3, 1.3};
-    float c[8] = {0};
+    float a[SIZE] = {1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3, 1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3, 1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3,1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3};
+    float b[SIZE] = {1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3, 1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3, 1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3,1.1, 2.2, 3.3, 4.4, 3.3, 3.3, 1.3, 1.3};
+    float c[SIZE] = {0};
+    float d[SIZE] = {0};
 
+    int t1 = time_asm();
     add_arrays(a,b,c);
+    int t2 = time_asm();
+    
+    print(c);
+    printf("ASM: %d \n", t2-t1);
 
-    for(int i = 0; i < 8; ++i){
-        printf("%f ", c[i]);
-    }
-    printf("\n");
+    t1 = time_asm();
+    c_add_arrays(a,b,d);
+    t2 = time_asm();
+    
+    print(d);
+    printf("C: %d \n", t2-t1);
+
+    return 0;
 
     return 0;
 }
