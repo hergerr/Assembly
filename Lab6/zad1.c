@@ -33,14 +33,14 @@ int main()
     int t2 = time_asm();
     
     print(c);
-    printf("ASM: %d \n", t2-t1);
+    printf("ASM: %d \n\n", t2-t1);
 
     t1 = time_asm();
     c_add_arrays(a,b,d);
     t2 = time_asm();
     
     print(d);
-    printf("C: %d \n", t2-t1);
+    printf("C: %d \n\n", t2-t1);
 
     return 0;
 

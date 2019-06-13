@@ -27,10 +27,8 @@ add_arrays:
 time_asm:
 push %rbp
 mov %rsp, %rbp
-    mov $0, %eax
-    mov $0, %edx
-    rdtsc
-    shl $32, %rdx
-    add %edx, %eax
+    mov $0, %rax
+    mov $0, %rdx
+    rdtsc       # licznik  w rdx:rax, rdx nie zdąży sie wypełnic
 leave
 ret
