@@ -29,6 +29,8 @@ push %rbp
 mov %rsp, %rbp
     mov $0, %rax
     mov $0, %rdx
-    rdtsc       # licznik  w rdx:rax, rdx nie zdąży sie wypełnic
+    rdtsc           # licznik  w rdx:rax
+    shl $32, %rdx   # przesuniecie zawartosci ktora jest tylko na 32 mlodszych bitach do przodu
+    add %rdx, %rax  # sklejenie starszych i mlodszych bitow. wynik w rax
 leave
 ret
